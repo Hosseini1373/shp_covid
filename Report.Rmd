@@ -1,0 +1,559 @@
+---
+title: "Bericht über die Datenanalyse des SHP-Datensatzes"
+author: "Dimitriev, Erismann, Hosseini"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Dokumentation Projekt 2
+
+## Einleitung
+
+Dieser Bericht behandelt folgende Fragestellung:
+
+**"Welche Faktoren stehen mit einer Veränderung der allgemeinen Lebenszufriedenheit seit Beginn der Verbreitung von Covid-19 in Beziehung?"**
+
+Die Zielgrösse '*Änderung der allgemeinen Lebenszufriedenheit von 2019 auf 2020'* soll untersucht werden. Dazu kommen Variablen, die mögliche Einflussfaktoren darstellen. Des weiteren bestimmten wir drei zusätzliche Variablen, die möglicherweise einen Einfluss auf die Zielvariable haben. Die verwendeten Daten stammen vom Swiss Household Panel (SHP). Es sind nur volljährige Personen berücksichtigt worden.
+
+## Organisation
+
++---------------+------------------------------------------------------------------------------------------------------+---------------+
+| Woche         | Auftrag                                                                                              | Zuständigkeit |
++===============+======================================================================================================+===============+
+| 28.03 - 01.04 | -   Einarbeiten in den Auftrag                                                                       | Team          |
+|               |                                                                                                      |               |
+|               | -   Datenstruktur planen und festlegen: [git.zhaw](https://github.zhaw.ch/erismpat/PM_2_Praktikum_2) | Patrick       |
+|               |                                                                                                      |               |
+|               | -   Daten herunterladen                                                                              | Ahmad         |
+|               |                                                                                                      |               |
+|               | -   Einlesen der ersten Daten in R                                                                   | Patrick       |
+|               |                                                                                                      |               |
+|               | -   Uns mit den erhaltenen Daten vertraut machen                                                     | Team          |
+|               |                                                                                                      |               |
+|               | -   Definieren der eigenen Variablen                                                                 | Team          |
+|               |                                                                                                      |               |
+|               | -   Erstellen der Dokumentation                                                                      | Team          |
++---------------+------------------------------------------------------------------------------------------------------+---------------+
+|               |                                                                                                      |               |
++---------------+------------------------------------------------------------------------------------------------------+---------------+
+| 04.04 - 08.04 | -   Alle Daten einlesen                                                                              | Patrick       |
+|               |                                                                                                      |               |
+|               | -   Daten gemäss Vorgaben aufbereiten                                                                | Ahmad         |
+|               |                                                                                                      |               |
+|               | -   Vorgegebene Variablen einlesen und wenn nötig definieren                                         | Team          |
+|               |                                                                                                      |               |
+|               | -   Eigene Variablen erstellen                                                                       | Patrick       |
++---------------+------------------------------------------------------------------------------------------------------+---------------+
+|               |                                                                                                      |               |
++---------------+------------------------------------------------------------------------------------------------------+---------------+
+| 11.04 - 15.04 | -   Re-Check der definierten Variablen                                                               | Team          |
+|               |                                                                                                      |               |
+|               | -   Prüfen wo es NA's hat, nötigenfalls Annnahmen treffen                                            | Patrick       |
+|               |                                                                                                      |               |
+|               | -   Abgleich der übriggebliebenen Daten mit Daten vom BFS                                            | Stojche       |
++---------------+------------------------------------------------------------------------------------------------------+---------------+
+|               |                                                                                                      |               |
++---------------+------------------------------------------------------------------------------------------------------+---------------+
+| 18.04 - 22.04 | -   EXPD                                                                                             | Ahmad         |
+|               |                                                                                                      |               |
+|               | -   Auswertung der Daten                                                                             | Stojche       |
+|               |                                                                                                      |               |
+|               | -   R-Markdown erstellen für Abgabe                                                                  | Patrick       |
++---------------+------------------------------------------------------------------------------------------------------+---------------+
+
+\newpage
+
+## Variablen
+
+### Vordefinierte Variablen:
+
+![](images/paste-70155DF5.png)
+
+### Selbstdefinierte Einflussfaktoren
+
+1.  Illness / Accident (P20L01)\
+    Hypothese: In der Pandemie kam es zu weniger Unfällen, wegen den strikten Einschränkungen in der Mobilität, deshalb sind die Menschen glücklicher.
+
+2.  Happy with Partner(P20F54)\
+    Hypothese: Zielgrösse ist abhängig von der Zufriedenheit mit dem Partner.
+
+3.  Trust in Federal Government(P17P04)\
+    Hypthese: Wer durch die Pandemie das Vertrauen in die Regierung verlor, ist unglücklicher.\
+    Die Variable ist den Jahren 2019 und 2018 nicht verfügbar, deshalb griffen wir auf das Jahr 2017 zurück.
+
+\newpage
+
+## Datenaufbereitung
+
+Die Datenaufbereitung erwies sich als keine leichte Kost. Zuerst selektierten wir die benötigten Variablen, um die Zusammenführung der Daten nicht unnötig gross zu gestalten. Danach wurden die Datensätze wie folgt zusammengeführt (Alle sind mit Left-Joins zusammengeführt). 
+
+### Zusammenführen der Daten gemäss Skizze
+
+![](images/paste-DE88D162.png)
+
+![](images/paste-A4F4C7A0.png)
+
+![](images/paste-271FA5E9.png)
+
+Unser Datensatz 'merge', beinhaltet somit alle benötigten Variablen, um die Bereinung der Daten zu starten.
+
+### Resultate des Parallel-Codings
+
+Stojche und Ahmed führten gleichzeitig eine explorative Datenanalyse der Daten durch und verglichen schliesslich die Analyse. Ahmad erstellte Diagramme, die sich auf die Verteilung der einzelnen Kategorien konzentrieren. Stojche erstellte Diagramme, die sich sowohl auf die Verteilung jeder Kategorie als auch zusätzlich auf die Anzahl der Datenpunkte, die zu dieser Kategorie gehören, konzentrieren. Seine Variante deutet darauf hin, ob die Verteilung in jeder Kategorie im Verhältnis zur Anzahl der Datenpunkte in dieser Kategorie sinnvoll ist.
+
+## Datenqualität
+
+### NA-Werte:
+
++--------------------------------------------------------------+-------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Variable                                                     | Anzahl (% - Anteil der Gesamtdaten)                         | Grund                                                                                                                                                              |
++==============================================================+=============================================================+====================================================================================================================================================================+
+| Change_satisfaction                                          | 63 (\~1%)                                                   | Der Grossteil der NA's ist aus des Covid-Daten(C20PC44), es handelt sich unserer Meinung nach um eine geringe Anzahl NA' bezogen auf die Gesamtdaten.              |
++--------------------------------------------------------------+-------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|                                                              |                                                             |                                                                                                                                                                    |
++--------------------------------------------------------------+-------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Relation_status                                              | 72 (\~1,5%)                                                 | Coviddatensatz beinhaltet fehlende Daten.                                                                                                                           |
++--------------------------------------------------------------+-------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|                                                              |                                                             |                                                                                                                                                                    |
++--------------------------------------------------------------+-------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Change_in_relation                                           | 170 (\~3,5%)                                                | Die Variable (C20D29) beinhaltet 72 NA's, die sich durch die neue Definition der Variable auf 170 erhöhten.                                                          |
++--------------------------------------------------------------+-------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|                                                              |                                                             |                                                                                                                                                                    |
++--------------------------------------------------------------+-------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Workingsituation                                             | 151 (\~3%)                                                  | Entstehung der NA's durch die Kombination verschiedener Variablen. Mögliche Gründe für diese NA's könnten sein, dass Leute ihre Arbeitssituation preisgeben wollen. |
++--------------------------------------------------------------+-------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|                                                              |                                                             |                                                                                                                                                                    |
++--------------------------------------------------------------+-------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Corona_infection                                             | 99 (\~2%)                                                   | Fehlende Werte sind gering.                                                                                                                                         |
++--------------------------------------------------------------+-------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|                                                              |                                                             |                                                                                                                                                                    |
++--------------------------------------------------------------+-------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Household_type                                               | 3 (\~0.05%)                                                 | Werte kommen von der Variable.                                                                                                                                      |
++--------------------------------------------------------------+-------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|                                                              |                                                             |                                                                                                                                                                    |
++--------------------------------------------------------------+-------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Income                                                       | 383 (\~7%)                                                  | Grosse Anzahl fehlende Werte. NA's sind bereits von der Variable (I19HTYN). Es könnte durch Schweizer-Spiessbürgertum erklärt werden. Man redet nicht über Geld.       |
++--------------------------------------------------------------+-------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|                                                              |                                                             |                                                                                                                                                                    |
++--------------------------------------------------------------+-------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Financial_problem                                            | 309 (\~6%)                                                  | Grosse Anzahl fehlende Werte. Variable ist keine Kombination aus mehreren Variablen! Man sieht ähnlich Situation wie Income.                                                                           |
++--------------------------------------------------------------+-------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|                                                              |                                                             |                                                                                                                                                                    |
++--------------------------------------------------------------+-------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Illness_accident                                             | 368 (\~6.5%)                                                | Die allermeisten Werte entstammen der Variable (P20L01), die Variable (P19L01) enthält nur drei NA's.                                                               |
++--------------------------------------------------------------+-------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|                                                              |                                                             |                                                                                                                                                                    |
++--------------------------------------------------------------+-------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Happy_with_partner                                           | 1585 (\~28%)                                                | Die beiden Grundvariablen (P19F54,P20F54) beinhalten beide über 1000 fehlende Werte.                                                                                |
++--------------------------------------------------------------+-------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|                                                              |                                                             |                                                                                                                                                                    |
++--------------------------------------------------------------+-------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Trust_in_government                                          | 819 (\~14%)                                                 | Die Variable (P17P04) enthält 533 fehlende Werte und die Variable (P20P04) enthält 390 NA's.                                                                       |
++--------------------------------------------------------------+-------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|                                                              |                                                             |                                                                                                                                                                    |
++--------------------------------------------------------------+-------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Total                                                        | 4022 (\~71%)                                                | Wenn wir alle NA's entfernen würden, gingen drei-viertel der Beobachtungen verloren.                                                                               |
++--------------------------------------------------------------+-------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+Fazit:
+
+Variablen, die im Bezug auf die Gesamtbeobachtungen über 10% fehlende Werte haben, sollten für die Auswertung nicht verwendet werden, da die Stichprobe stark an ihrer Representativität einbüsst, wenn alle fehlenden Werte entfernt werden würden.
+
+Deshalb änderten wir bei unseren selbstdefinierten Variablen alle NA's zum Zustand 'unknown', damit keine unnötigen Verluste der Beobachtungen in Kauf genommen werden müssen. Dadurch konnten wir die Verluste der NA's auf 1025 Beobachtungen reduzieren.
+
+\newpage
+
+## Plausibilität der Daten
+
+Um zu prüfen, dass die Stichprobe die Bevölkerung der Schweiz repräsentiert, vergleichen wir die Stichprobe mit Daten des [BFS](https://www.bfs.admin.ch/bfs/de/home/statistiken/bevoelkerung/stand-entwicklung/alter-zivilstand-staatsangehoerigkeit.assetdetail.18404679.html). Die drei Grafiken sollen darüber aufschliessen, wie repräsentativ unser Datensatz ist:
+
+```{r echo= FALSE,warning = FALSE, message = FALSE}
+library(tidyverse)
+
+load(file="cleaned_data/Cleaned_data.RData")
+load(file="cleaned_data/Cleaned_data_na.RData")
+
+```
+
+```{r echo= FALSE,warning = FALSE, message = FALSE, cache = TRUE}
+
+column_clear<-function(tib){
+  drop.cols <- c(1,2,4,5,6,7)
+  tib|>select(-(drop.cols))->tib
+  return(tib)
+}
+
+library(readxl)
+bfs<-suppressMessages(read_xlsx("BFS/px-x-0102010000_101_20220415-140732.xlsx",skip=2,n_max=53))|>
+  column_clear()|>#Remove some columns
+  fill(1,.direction = c("down"))|>#for each kanton add that it to the next line
+  rename(Canton=...3,Sex=...8)|>
+  rename_with(.cols=-c(1,2),.fn = \(x){str_extract(x, "[:digit:]*")})|>#remove Jahre from the column names
+  pivot_longer(cols = -c(1,2), names_to ="Age", values_to = "People")|>mutate(Sex=case_when(Sex=="Mann"~"Man",
+                                                                                            Sex=="Frau"~"Woman"))->tmp
+#just one thing: sum(tibble$Age>99) equal 0 and in the BFS table we have 100 years and above summarized in one column
+
+total<-nrow(tibble)
+tibble|>group_by(Age)|>summarise(Proportion=n())|>
+  mutate(Age=as.numeric(Age),Proportion=Proportion/total)->Data1  
+
+total<-nrow(tibble_na)
+tibble_na|>group_by(Age)|>summarise(Proportion=n())|>
+  mutate(Age=as.numeric(Age),Proportion=Proportion/total)->Data2 
+
+total<-sum(tmp$People)#all the people in BFS
+tmp|>group_by(Age)|>summarise(Proportion=sum(People))|>
+  mutate(Age=as.numeric(Age),Proportion=Proportion/total)->Data3
+
+colors <- c("red","green","blue")
+ggplot()+
+  geom_line(data=Data3, aes(x=Age, y=Proportion,  color='BFSPOP',group=1)) +
+  geom_line(data=Data1, aes(x=Age, y=Proportion, color='SHPPOP.ALL',  group=1))+
+  geom_line(data=Data2, aes(x=Age, y=Proportion, color='SHPPOP.COMPLETE', group=1))+
+  ylim(0, 0.0405)+
+  labs(color = "Source") +
+  scale_color_manual(values = colors)+
+  theme_bw()
+
+
+```
+
+Wie sich auf der Grafik erkennen lässt, sind jüngere Altersgruppen, sprich die 25 bis 35-Jährigen Menschen in der Stichprobe unterrepräsentiert. Hingegen sind ältere Altersgruppen überrepräsentiert.
+
+```{r echo= FALSE,message = FALSE, warning = FALSE, cache = TRUE}
+
+column_clear<-function(tib){
+  drop.cols <- c(1,2,4,5,6,7)
+  tib|>select(-(drop.cols))->tib
+  return(tib)
+}
+
+library(readxl)
+bfs<-suppressMessages(read_xlsx("BFS/px-x-0102010000_101_20220415-140732.xlsx",skip=2,n_max=53))|>
+  column_clear()|>#Remove some columns
+  fill(1,.direction = c("down"))|>#for each kanton add that it to the next line
+  rename(Canton=...3,Sex=...8)|>
+  rename_with(.cols=-c(1,2),.fn = \(x){str_extract(x, "[:digit:]*")})|>#remove Jahre from the column names
+  pivot_longer(cols = -c(1,2), names_to ="Age", values_to = "People")|>mutate(Sex=case_when(Sex=="Mann"~"Man",
+                                                                                            Sex=="Frau"~"Woman"))->tmp
+#just one thing: sum(tibble$Age>99) equal 0 and in the BFS table we have 100 years and above summarized in one column
+total<-nrow(tibble)
+tibble|>group_by(Sex)|>summarise(Proportion=n())|>
+  mutate(Sex=as.factor(Sex),Proportion=Proportion/total)->Data1
+
+total<-nrow(tibble_na)
+tibble_na|>group_by(Sex)|>summarise(Proportion=n())|>
+  mutate(Sex=as.factor(Sex),Proportion=Proportion/total)->Data2 
+
+
+total<-sum(tmp$People)#all the people in BFS
+tmp|>group_by(Sex)|>summarise(Proportion=sum(People))|>
+  mutate(Sex=as.factor(Sex),Proportion=Proportion/total)->Data3
+
+#Comparison of Sexes
+colors <- c("red","green","blue")
+ggplot()+
+  geom_line(data=Data3, aes(x=Sex, y=Proportion,  color='BFSPOP',group=1)) +
+  geom_line(data=Data1, aes(x=Sex, y=Proportion, color='SHPPOP.ALL',  group=1))+
+  geom_line(data=Data2, aes(x=Sex, y=Proportion, color='SHPPOP.COMPLETE', group=1))+
+  ylim(0, 0.6)+
+  labs(color = "Source") +
+  scale_color_manual(values = colors)+
+  theme_bw()
+```
+
+Im Bezug auf die Geschlechterverteilung der Stichprobe sind keine nennenswerte Unterschiede zu erläutern.
+
+```{r echo= FALSE,message = FALSE, warning = FALSE, cache = TRUE}
+
+column_clear<-function(tib){
+  drop.cols <- c(1,2,4,5,6,7)
+  tib|>select(-(drop.cols))->tib
+  return(tib)
+}
+
+library(readxl)
+bfs<-suppressMessages(read_xlsx("BFS/px-x-0102010000_101_20220415-140732.xlsx",skip=2,n_max=53))|>
+  column_clear()|>#Remove some columns
+  fill(1,.direction = c("down"))|>#for each kanton add that it to the next line
+  rename(Canton=...3,Sex=...8)|>
+  rename_with(.cols=-c(1,2),.fn = \(x){str_extract(x, "[:digit:]*")})|>#remove Jahre from the column names
+  pivot_longer(cols = -c(1,2), names_to ="Age", values_to = "People")|>mutate(Sex=case_when(Sex=="Mann"~"Man",
+                                                                                            Sex=="Frau"~"Woman"))->tmp
+
+total<-nrow(tibble)
+tibble|>
+  group_by(Canton)|>
+  summarise(Proportion=n())|>
+  mutate(Canton=as.factor(Canton),Proportion=Proportion/total)->Data1  
+
+total<-nrow(tibble_na)
+tibble_na|>
+  group_by(Canton)|>
+  summarise(Proportion=n())|>
+  mutate(Canton=as.factor(Canton),Proportion=Proportion/total)->Data2 
+
+
+total<-sum(tmp$People)#all the people in BFS
+tmp|>
+  group_by(Canton)|>
+  summarise(Proportion=sum(People))|>
+  mutate(Canton=as.factor(Canton),Proportion=Proportion/total)->Data3
+
+# Canton Comparison
+colors <- c("red","green","blue")
+ggplot() +
+  geom_line(data = Data1, aes(x = Canton, y = Proportion, color = 'SHPPOP.ALL' ,group = 1))+
+  geom_line(data=Data2, aes(x=Canton, y = Proportion,color = 'SHPPOP.COMPLETE', group = 1 )) + 
+  geom_line(data=Data3, aes(x=Canton, y = Proportion,color = "BFSPOP", group = 1)) +
+  scale_y_continuous(labels = scales::percent) +
+  theme(axis.text.x = element_text(angle = 90))+
+  labs(color = "Source")
+
+
+```
+
+Die Vertretung der Kantone in der Stichprobe ist für die Schweizerbevölkerung representätiv.
+
+\newpage
+
+## Auswertung
+
+### Univariate Grafiken
+
+Die folgenden Abbildungen zeigen die explorative Datenanlyse mit jeweils einer Variable.
+
+```{r echo= FALSE,message = FALSE, warning = FALSE}
+
+tibble|>
+  mutate(Income_fac=case_when(
+    Income>200000~">2000000",
+    Income>150000~">150000",
+    Income>100000~">100000",
+    Income>80000~">80000",
+    Income>60000~">60000",
+    Income>40000~">40000",
+    Income>20000~">20000",
+    Income>10000~">10000",
+    Income<10000~"<10000",
+    TRUE~"unknown"
+  ),Income_fac=factor(Income_fac,levels = c("<10000",">10000",">20000",">40000",">60000",">80000",">100000",">150000",">2000000","unknown"),ordered = T))->tibble
+
+tibble_na|>
+  mutate(Income_fac=case_when(
+    Income>200000~">2000000",
+    Income>150000~">150000",
+    Income>100000~">100000",
+    Income>80000~">80000",
+    Income>60000~">60000",
+    Income>40000~">40000",
+    Income>20000~">20000",
+    Income>=10000~">10000",
+    Income<10000~"<10000",
+    TRUE ~ 'unkown'
+  ),Income_fac=factor(Income_fac,levels = c("<10000",">10000",">20000",">40000",">60000",">80000",">100000",">150000",">2000000","unknown"),ordered = T))->tibble_na
+
+univariate_kategorical<-function(tibble,kat_var,xlab,ylab){
+  tibble|>
+    count(.data[[ kat_var]])|>
+    mutate(kat_var_percent=(n / nrow(tibble))*100)|>
+    ggplot(aes(x=.data[[ kat_var]],y=kat_var_percent))+
+    geom_bar(stat = "identity",position = 'dodge')+
+    geom_text(aes(label=paste(round(kat_var_percent,1),"%")), position=position_dodge(width=0.9), vjust=-0.25)+
+    xlab(xlab)+
+    ylab(ylab)+
+    theme(axis.text.x = element_text(angle = 90))
+}
+```
+
+```{r echo= FALSE,message = FALSE, warning = FALSE}
+
+univariate_kategorical(tibble_na,"Change_satisfaction","Änderung der allgemeinen Lebenszufriedenheit","Häufigkeit in Prozent")
+
+```
+
+
+
+```{r echo= FALSE,message = FALSE, warning = FALSE}
+
+univariate_kategorical(tibble_na,"Canton","","Häufigkeit in Prozent")
+univariate_kategorical(tibble_na,"Commun_type","","Häufigkeit in Prozent")
+
+```
+
+```{r echo= FALSE,message = FALSE, warning = FALSE}
+
+univariate_kategorical(tibble_na,"Edu","","Häufigkeit in Prozent")
+univariate_kategorical(tibble_na,"Relation_status","In Beziehung?","Häufigkeit in Prozent")
+```
+
+```{r echo= FALSE,message = FALSE, warning = FALSE}
+
+univariate_kategorical(tibble_na,"Change_in_relation","","Häufigkeit in Prozent")
+univariate_kategorical(tibble_na,"Workingsituation","","Häufigkeit in Prozent")
+```
+
+```{r echo= FALSE,message = FALSE, warning = FALSE}
+
+univariate_kategorical(tibble_na,"Corona_infection","","Häufigkeit in Prozent")
+univariate_kategorical(tibble_na,"Household_type","","Häufigkeit in Prozent")
+```
+
+```{r echo= FALSE,message = FALSE, warning = FALSE}
+
+univariate_kategorical(tibble_na,"Income_fac","","Häufigkeit in Prozent")
+univariate_kategorical(tibble_na,"Financial_problem","","Häufigkeit in Prozent")
+```
+
+```{r echo= FALSE,message = FALSE, warning = FALSE}
+
+univariate_kategorical(tibble_na,"Unemployed","","Häufigkeit in Prozent")
+univariate_kategorical(tibble_na,"Illness_accident","","Häufigkeit in Prozent")
+```
+
+```{r echo= FALSE,message = FALSE, warning = FALSE}
+
+univariate_kategorical(tibble_na,"Happy_with_partner","","Häufigkeit in Prozent")
+univariate_kategorical(tibble_na,"Trust_government","","Häufigkeit in Prozent")
+```
+
+\newpage
+
+### Bivariate Grafiken
+
+Die nachstehenden Abbildungen sollen mögliche Zusammenhänge zwischen den Variablen und der Zielgrösse veranschaulichen.
+
+```{r echo= FALSE,message = FALSE, warning = FALSE}
+
+coll <- c("blue","green","red")
+bivariate_kategorical<-function(tibble,kat_var,xlab,ylab,typ, caption){
+  
+  tibble|>
+    count(.data[[kat_var]], Change_satisfaction) %>%
+    group_by(.data[[kat_var]]) %>%
+    mutate(pct= prop.table(n) * 100) %>%
+    ggplot() + aes(.data[[kat_var]], pct,fill=Change_satisfaction) +
+    geom_bar(stat="identity") +
+    ylab("Number of Participants") +
+    geom_text(aes(label=paste0(sprintf("%1.1f", pct),"%")),
+              position=position_stack(vjust=0.5)) +
+    scale_fill_manual(values = c("better"="lightblue","same"="chartreuse2","worse"="coral2"))+
+    ggtitle("Untersuchung des Einflusses auf die Zielgrösse")+
+    theme(axis.text.x = element_text(angle = 90),plot.caption = element_text(hjust = 0.5))+
+    coord_flip()+
+    labs(caption = caption)
+}
+
+bivariate_numerisch<-function(tibble,num_var,xlab,ylab,caption){
+  tibble|>
+    ggplot() + aes(y=.data[[num_var]], x=Change_satisfaction)+
+    geom_boxplot(outlier.colour="black", outlier.shape=16,
+                 outlier.size=2, notch=TRUE)+
+    labs(caption = caption)+
+    scale_y_continuous()
+  
+}
+
+bivariate_categorical <- function(tibble, cat_var,xlab,ylab,typ, caption){
+  tibble |>
+    ggplot(aes(x = .data[[cat_var]],fill=Change_satisfaction)) +
+    geom_bar(position="stack")+
+    theme(axis.text.x = element_text(angle=90), )+
+    labs(caption = caption)+
+    scale_fill_manual(values = c("better"="lightblue","same"="chartreuse2","worse"="coral2"))
+  }
+
+
+```
+
+```{r echo= FALSE,message = FALSE, warning = FALSE}
+
+bivariate_kategorical(tibble_na,"Canton","","Häufigkeit","fill","Im Kanton Glarus ist die stärkste positive Veränderung sichtbar, \n im Kanton Schwyz trat genau das Gegenteil ein.")
+bivariate_categorical(tibble_na, "Canton","","Häufigkeit","fill","Absolute Häufigkeiten")
+
+```
+
+```{r echo= FALSE,message = FALSE, warning = FALSE}
+
+bivariate_kategorical(tibble_na,"Commun_type","","Häufigkeit","fill","Der Geimeindetyp 'Industrie' hat die grösste negative Veränderung im Bereich der Lebenszufriedenheit.")
+bivariate_categorical(tibble_na,"Commun_type","","Häufigkeit","fill","Absolute Häufigkeiten")
+
+```
+
+```{r echo= FALSE,message = FALSE, warning = FALSE}
+
+bivariate_kategorical(tibble_na,"Edu","","Häufigkeit","fill","Leute mit tiefen Bildungsstand laut Graphik wurden in der Krise unzufriedener.")
+bivariate_categorical(tibble_na,"Edu","","Häufigkeit","fill","Absolute Häufigkeit")
+```
+
+```{r echo= FALSE,message = FALSE, warning = FALSE}
+bivariate_kategorical(tibble_na,"Relation_status","","Häufigkeit","fill","Der Beziehungsstatus hat keinen markanten Einflusses auf die Zufriedenheit")
+bivariate_categorical(tibble_na,"Relation_status","","Häufigkeit","fill","Absolute Häufigkeiten")
+```
+
+```{r echo= FALSE,message = FALSE, warning = FALSE}
+bivariate_kategorical(tibble_na,"Change_in_relation","","Häufigkeit","fill","Die Grafik zeigt, dass es den Menschen mit einer neuen Beziehung besser geht als den Menschen,\n die sich von ihrem Partner getrennt haben.")
+bivariate_categorical(tibble_na,"Change_in_relation","","Häufigkeit","fill","Absolute Häufigkeit")
+```
+
+```{r echo= FALSE,message = FALSE, warning = FALSE}
+bivariate_kategorical(tibble_na,"Workingsituation","","Häufigkeit","fill","Die Änderung der Arbeitsituation hat keinen (prozentual gesehen) Einfluss")
+bivariate_categorical(tibble_na,"Workingsituation","","Häufigkeit","fill","Absolute Häufigkeit")
+```
+
+```{r echo= FALSE,message = FALSE, warning = FALSE}
+bivariate_kategorical(tibble_na,"Corona_infection","In Beziehung?","","Häufigkeit in Prozent","Menschen mit einer Corona-Infektion büssten in Lebenszufriedenheit ein")
+bivariate_categorical(tibble_na,"Corona_infection","In Beziehung?","","Häufigkeit in Prozent","Absolute Häufigkeit")
+```
+
+```{r echo= FALSE,message = FALSE, warning = FALSE}
+bivariate_kategorical(tibble_na,"Household_type","","Häufigkeit","fill","Veränderung in diesem Vergleich zu erkennen sind sinnlos")
+bivariate_categorical(tibble_na,"Household_type","","Häufigkeit","fill","Absolute Häufigkeit")
+```
+
+```{r echo= FALSE,message = FALSE, warning = FALSE}
+bivariate_kategorical(tibble_na,"Income_fac","","Häufigkeit","fill","Nicht verzerrte Aussagen sind nicht möglich")
+bivariate_categorical(tibble_na,"Income_fac","","Häufigkeit","fill","Absolute Häufigkeit")
+```
+
+```{r echo= FALSE,message = FALSE, warning = FALSE}
+bivariate_kategorical(tibble_na,"Commun_type","","Häufigkeit","fill","Der Geimeindetyp 'Industrie' hat die grösste negative Veränderung im Bereich der Lebenszufriedenheit")
+bivariate_categorical(tibble_na,"Commun_type","","Häufigkeit","fill","Absolute Häufigkeit")
+```
+
+```{r echo= FALSE,message = FALSE, warning = FALSE}
+bivariate_kategorical(tibble_na,"Financial_problem","","Häufigkeit","fill","Erstaunlicherweise erging es laut Graphik Leuten mit ehemaligen Finanziellen Problemen besser.")
+bivariate_categorical(tibble_na,"Income_fac","","Häufigkeit","fill","Absolute Häufigkeit")
+```
+
+```{r echo= FALSE,message = FALSE, warning = FALSE}
+bivariate_kategorical(tibble_na,"Unemployed","","Häufigkeit","fill","Laut Graphik hat die Arbeitslosgkeit keinen merklichen Einflusses auf die Zielgrösse")
+bivariate_categorical(tibble_na,"Unemployed","","Häufigkeit","fill","Absolute Häufigkeit")
+#Hat keinen merklichen Einfluss auf die Zielgrösse
+```
+
+```{r echo= FALSE,message = FALSE, warning = FALSE}
+bivariate_kategorical(tibble_na,"Illness_accident","","Häufigkeit","fill","Menschen, die einen Unfall oder Krankheit erlitten, erfuhren laut Graphik negative Auswirkungen in der Lebenqualität")
+bivariate_categorical(tibble_na,"Illness_accident","","Häufigkeit","fill","Absolute Häufigkeit")
+
+```
+
+```{r echo= FALSE,message = FALSE, warning = FALSE}
+
+bivariate_kategorical(tibble_na,"Happy_with_partner","","Häufigkeit","fill","Leute, die unglückich in der Beziehung waren, verloren laut Graphik auch an Lebensqualität.")
+bivariate_categorical(tibble_na,"Happy_with_partner","","Häufigkeit","fill","Absolute Häufigkeit")
+```
+
+```{r echo= FALSE,message = FALSE, warning = FALSE}
+
+bivariate_kategorical(tibble_na,"Trust_government","","Häufigkeit","fill","Menschen mit Vertrauensverlust in die Regierung erlitten erhöhte negative Auswirkungen in der Lebensqualität")
+bivariate_categorical(tibble_na,"Trust_government","","Häufigkeit","fill","Absolute Häufigkeit")
+```
+
+## Schlusswort
+
+Die Zielvariable hat sich im Verlauf der Pandemie nicht merklich verändert. Die Lebenszufriedenheit hat sich für etwa $\frac{2}{5}$ der Bevölkerung nicht verändert. Für die restlichen $\frac{3}{5}$ kam es entweder zu einer Verbesserung oder Verschlechterung der Lebenszufriedenheit. Man kann aber nicht den Schluss ziehen, dass es an der Pandemie lag. 
